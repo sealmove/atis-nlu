@@ -4,7 +4,7 @@ This project uses ATIS, a well-known airplane ticket reservation system dataset.
 # Outline
 The project includes the following:
 - An end-to-end NLU system to demonstrate a practical end result
-- A collection of jupyter notebooks that demonstrate the different components and methods used for building the nlp pipelines
+- A collection of jupyter notebooks to demonstrate the techniques used for building the NLP pipelines
 
 The notebooks are split into the following 4 chapters:
 
