@@ -6,7 +6,9 @@ The project includes the following:
 - An end-to-end NLU system to demonstrate a practical end result
 - A collection of jupyter notebooks to demonstrate the techniques used for building the NLP pipelines
 
-The notebooks are split into the following 4 chapters:
+The notebooks are split into the following 5 chapters:
+
+0. Introduce and explore ATIS dataset
 
 1. Extract the named entities with two different methods:
     - with spaCy Matcher
