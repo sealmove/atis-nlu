@@ -17,8 +17,8 @@ The notebooks are split into the following 4 chapters:
     - by using wordlists
     - by walking on the dependency tree
 
-3. Match keywords:
-    - to synonyms from a synonyms list to detect semantic similarity
+3. Match keywords to synonyms:
+    - from a synonyms list to detect semantic similarity
     - with word vector-based semantic similarity methods
 
 4. Generate a semantic representation
