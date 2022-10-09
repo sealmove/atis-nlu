@@ -6,6 +6,10 @@ The project includes the following:
 - An end-to-end NLU system to demonstrate a practical end result
 - A collection of jupyter notebooks to demonstrate the techniques used for building the NLP pipelines
 
+## End-to-end system
+An airlines information application which searches a database with queries written in plain english.
+
+## Notebooks
 The notebooks are split into the following 5 chapters:
 
 0. Introduce and explore ATIS dataset
