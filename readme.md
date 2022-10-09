@@ -14,7 +14,7 @@ The notebooks are split into the following 5 chapters:
     - with spaCy Matcher
     - by walking on the dependency tree
 
-2. Determine the intent of the user utterance with three different methods:
+2. Determine the intent of the user utterance using various techniques:
     - by extracting the verbs and their direct objects
     - by using wordlists
     - by walking on the dependency tree
