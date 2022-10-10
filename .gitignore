@@ -1,5 +1,5 @@
 .env
-end_to_end_system/__pycache__
+end_to_end_system/backend/__pycache__
 data_engineering/flight-data.csv
 data_engineering/airports-extended.dat
 data_engineering/flights.db
