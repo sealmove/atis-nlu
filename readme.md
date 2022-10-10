@@ -1,11 +1,11 @@
 # Introduction
-This project uses ATIS, a well-known airplane ticket reservation system dataset. The goal is to extract information from human messages, represent it in a machine-readable format, and then build a system that uses this information.
+This project is a journaled hands-on implementation of an assistance software that can answer to a subset of questions found in ATIS, a well-known airplane ticket reservation system dataset. The goal is to answer to flight-related inquiry written in plain english.
 
 # Outline
 The project includes the following:
 - A collection of jupyter notebooks to demonstrate the techniques used for building the NLP pipelines
-- A jupyter notebooks which showcases how to cleanse data to adjust it to the application's needs
-- An end-to-end NLU system to demonstrate a practical end result
+- A jupyter notebook which showcases how to cleanse data to adjust it to the application's needs
+- An end-to-end NLU application to demonstrate a practical end result
 
 ## NLP Techniques
 The notebooks are split into the following 5 chapters:
@@ -33,4 +33,4 @@ The following datasets are used to compile a sqlite database:
 - [OpenFlights: airports-extended.dat](https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports-extended.dat)
 
 ## End-to-end System
-An airlines information application which searches a database with queries written in plain english.
+A flight information assistance application which searches a database with queries written in plain english.
