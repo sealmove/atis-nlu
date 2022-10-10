@@ -3,13 +3,11 @@ This project uses ATIS, a well-known airplane ticket reservation system dataset.
 
 # Outline
 The project includes the following:
-- An end-to-end NLU system to demonstrate a practical end result
 - A collection of jupyter notebooks to demonstrate the techniques used for building the NLP pipelines
+- A jupyter notebooks which showcases how to cleanse data to adjust it to the application's needs
+- An end-to-end NLU system to demonstrate a practical end result
 
-## End-to-end system
-An airlines information application which searches a database with queries written in plain english.
-
-## Notebooks
+## NLP Techniques
 The notebooks are split into the following 5 chapters:
 
 0. Introduce and explore ATIS dataset
@@ -28,3 +26,11 @@ The notebooks are split into the following 5 chapters:
     - with word vector-based semantic similarity methods
 
 4. Generate a semantic representation
+
+## Data Engineering
+The following datasets are used to compile a sqlite database:
+- [Kaggle: flight data.csv](https://www.kaggle.com/datasets/polartech/flight-data-with-1-million-or-more-records)
+- [OpenFlights: airports-extended.dat](https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports-extended.dat)
+
+## End-to-end System
+An airlines information application which searches a database with queries written in plain english.
