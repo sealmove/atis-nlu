@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;500&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>ATIS</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <style>
+    .input {
+      margin: 0 auto;
+      width: 70vw;
+      height: 20vh;
+      left: 15vw;
+      top: 30vh;
+      text-align: center;
+      position: absolute;
+      font-size: 30px;
+      border: none;
+      font-family: 'Montserrat', sans-serif;
+      animation-duration: 0.6;
+      resize: none;
+    }
+
+    textarea[type=textbox]:focus {
+      outline: none;
+      caret-color: transparent;
+      word-wrap: break-word;
+      word-break: break-all;
+    }
+
+    .animated-response {
+      margin: 0 auto;
+      width: 70vw;
+      height: 50vh;
+      left: 15vw;
+      top: 50vh;
+      text-align: center;
+      position: absolute;
+      font-size: 30px;
+      font-family: 'Montserrat', sans-serif;
+      animation: typing 4s steps(2, end) forwards;
+      animation-timing-function: ease-in-out;
+      overflow: hidden;
+    }
+
+    @keyframes typing {
+      from {
+        /* transform: translateY(0); */
+        opacity: 0;
+      }
+
+      to {
+        /* transform: translateY(-50px); */
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <textarea class="input" id="userInput" type="textbox" spellcheck="false"
+      onblur="var x = this; setTimeout(function() {x.focus()}, 10)" autocomplete="off" autofocus></textarea>
+    <div class="animated-response" id="responseDiv"></div>
+    <script type="text/javascript">
+      userInput = $('#userInput');
+      userInput.keydown(function (e) {
+        if (e.key === "Enter") {
+          event.preventDefault();
+          $.ajax({
+            type: "POST",
+            url: "http://localhost:5000",
+            data: userInput.val(),
+            contentType: "text/plain",
+            complete: function (resp) {
+              responseBox = document.getElementById('responseDiv');
+              responseBox.style.opacity = 0
+              responseBox.style.animation = 'none'
+              setTimeout(() => responseBox.style.animation = '', 10);
+              responseBox.innerHTML = resp.responseText;
+            }
+          });
+        }
+      })
+    </script>
+  </main>
+</body>
+
+</html>
