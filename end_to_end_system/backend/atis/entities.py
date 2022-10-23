@@ -5,11 +5,11 @@ from spacy.matcher import Matcher
 
 def extract_locations(nlp: Language, doc: Doc) -> dict:
     matcher = Matcher(nlp.vocab)
-    pattern = [{'POS': 'ADP'}, {'ENT_TYPE': 'GPE'}]
+    pattern = [{'POS': 'ADP', 'OP': '+'}, {'ENT_TYPE': 'GPE', 'OP': '+'}]
     matcher.add('Location', [pattern])
     matches = matcher(doc)
     spans = [doc[start:end] for _, start, end in matches]
-    locations = {l[0].text: l[1].text for l in spans}
+    locations = {s[0].text: s[1:].text for s in spans}
     return locations
 
 
