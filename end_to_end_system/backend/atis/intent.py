@@ -1,16 +1,9 @@
 from typing import Optional
-from enum import Enum
 from spacy import Language
 from spacy.tokens import Doc
+from spacy.tokens import Token
 from spacy.matcher import DependencyMatcher
-
-
-class Intent(str, Enum):
-    CHEAPEST = 'find_cheapest_flight'
-    MOST_EXPENSIVE = 'find_most_expensive_flight'
-    AIRPORT_CODE = 'find_airport_code'
-    CITY = 'find_city_of_airport'
-    FLIGHT = 'find_flight'
+from atis.types import *
 
 
 def get_adjectives(nlp: Language, doc: Doc):
@@ -31,6 +24,22 @@ def get_adjectives(nlp: Language, doc: Doc):
     matcher.add("FOUNDED", [pattern])
 
     return [(doc[target], doc[modifier]) for _, (target, modifier) in matcher(doc)]
+
+
+def is_intent_cheapest(adjectives: list[tuple[Token, Token]], object: Token):
+    for (target, modifier) in adjectives:
+        if object == target:
+            if modifier.lemma_ == 'cheap':
+                return True
+    return False
+
+
+def is_intent_most_expensive(adjectives: list[tuple[Token, Token]], object: Token):
+    for (target, modifier) in adjectives:
+        if object == target:
+            if modifier.lemma_ == 'expensive':
+                return True
+    return False
 
 
 def detect_intent(nlp: Language, doc: Doc) -> Optional[Intent]:
@@ -54,7 +63,8 @@ def detect_intent(nlp: Language, doc: Doc) -> Optional[Intent]:
                 break
 
     adjectives = get_adjectives(nlp, doc)
-    for (target, modifier) in adjectives:
-        if intentObj == target:
-            if modifier.lemma_ == 'cheap':
-                return Intent.CHEAPEST
+
+    if is_intent_cheapest(adjectives, intentObj):
+        return Intent.CHEAPEST
+    elif is_intent_most_expensive(adjectives, intentObj):
+        return Intent.MOST_EXPENSIVE
