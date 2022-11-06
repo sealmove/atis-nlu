@@ -9,6 +9,7 @@ app = Flask(__name__)
 nlp = spacy.load('en_core_web_lg')
 conn = sqlite3.connect('flights.db', check_same_thread=False)
 c = conn.cursor()
+conn.set_trace_callback(print)
 
 
 @app.route('/', methods=['POST'])

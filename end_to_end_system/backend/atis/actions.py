@@ -5,6 +5,12 @@ from atis.debug import bcolors
 from atis.queries import *
 
 
+def exec_query(c: Cursor, query: str, args: list[str]):
+    print(bcolors.OKCYAN, end='')
+    c.execute(query, args)
+    print(bcolors.ENDC, end='')
+
+
 def fetch_rows(c: Cursor) -> Optional[Row]:
     rows = c.fetchall()
     if rows:
@@ -25,21 +31,21 @@ def action_cheapest(c: Cursor, representation: dict) -> str:
     from_city = representation['entities']['locations'].get('from')
     dest_city = representation['entities']['locations'].get('to')
     if from_city and dest_city:
-        c.execute(SQL_CHEAPEST_FROM_TO, [from_city, dest_city])
+        exec_query(c, SQL_CHEAPEST_FROM_TO, [from_city, dest_city])
         rows = fetch_rows(c)
         if not rows:
             return 'No flights found'
         row = rows[0]
         return f'The cheapest flight from {row[0]} to {row[1]} is at {row[2]} and costs ${row[3]}'
     elif from_city:
-        c.execute(SQL_CHEAPEST_FROM, [from_city])
+        exec_query(c, SQL_CHEAPEST_FROM, [from_city])
         rows = fetch_rows(c)
         if not rows:
             return 'No flights found'
         row = rows[0]
         return f'The cheapest flight from {row[0]} is towards {row[1]}, at {row[2]} and costs ${row[3]}'
     elif dest_city:
-        c.execute(SQL_CHEAPEST_TO, [dest_city])
+        exec_query(c, SQL_CHEAPEST_TO, [dest_city])
         rows = fetch_rows(c)
         if not rows:
             return 'No flights found'
@@ -54,21 +60,21 @@ def action_most_expensive(c: Cursor, representation: dict) -> str:
     from_city = representation['entities']['locations'].get('from')
     dest_city = representation['entities']['locations'].get('to')
     if from_city and dest_city:
-        c.execute(SQL_MOST_EXPENSIVE_FROM_TO, [from_city, dest_city])
+        exec_query(c, SQL_MOST_EXPENSIVE_FROM_TO, [from_city, dest_city])
         rows = fetch_rows(c)
         if not rows:
             return 'No flights found'
         row = rows[0]
         return f'The most expensive flight from {row[0]} to {row[1]} is at {row[2]} and costs ${row[3]}'
     elif from_city:
-        c.execute(SQL_MOST_EXPENSIVE_FROM, [from_city])
+        exec_query(c, SQL_MOST_EXPENSIVE_FROM, [from_city])
         rows = fetch_rows(c)
         if not rows:
             return 'No flights found'
         row = rows[0]
         return f'The most expensive flight from {row[0]} is towards {row[1]}, at {row[2]} and costs ${row[3]}'
     elif dest_city:
-        c.execute(SQL_MOST_EXPENSIVE_TO, [dest_city])
+        exec_query(c, SQL_MOST_EXPENSIVE_TO, [dest_city])
         rows = fetch_rows(c)
         if not rows:
             return 'No flights found'
@@ -84,7 +90,7 @@ def action_city(c: Cursor, representation: dict) -> str:
     if not airports or len(airports) == 0:
         print(f"{bcolors.FAIL}No airport entity detected{bcolors.ENDC}")
         return 'Google it'
-    c.execute(SQL_CITY_OF_AIRPORT, [airports[0]])
+    exec_query(c, SQL_CITY_OF_AIRPORT, [airports[0]])
     rows = fetch_rows(c)
     if not rows:
         return 'Airport not found'
@@ -97,7 +103,7 @@ def action_airport_code(c: Cursor, representation: dict) -> str:
         print(f"{bcolors.FAIL}Did not recognise intented city of airport{bcolors.ENDC}")
         return 'Google it'
     city = representation['entities']['geopolitical'][0]
-    c.execute(SQL_AIRPORT_CODE_OF_CITY, [city])
+    exec_query(c, SQL_AIRPORT_CODE_OF_CITY, [city])
     rows = fetch_rows(c)
     if not rows:
         return 'Airport not found'
