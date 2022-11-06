@@ -78,8 +78,13 @@ def detect_intent(nlp: Language, doc: Doc) -> Optional[Intent]:
         return dobj_intent
 
     advmod_filter = filter(lambda token: token.dep_ == 'advmod', list(doc))
-    advmod = list(advmod_filter)
-    if advmod[0].text.lower() == 'where':
+    advmods = list(advmod_filter)
+    if advmods and advmods[0].text.lower() == 'where':
         return Intent.CITY
+
+    airport_filter = filter(lambda token: token.lemma_ == 'airport', list(doc))
+    airports = list(airport_filter)
+    if airports:
+        return Intent.AIRPORT_CODE
 
     return None

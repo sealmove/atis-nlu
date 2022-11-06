@@ -55,3 +55,9 @@ SQL_CITY_OF_AIRPORT = '''
     from airports as a
     where a.code = ? collate nocase
 '''
+
+SQL_AIRPORT_CODE_OF_CITY = '''
+    select code
+    from airports as a
+    where a.city = ? collate nocase
+'''

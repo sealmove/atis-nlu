@@ -13,7 +13,6 @@ def parse(nlp: Language, utterance: str) -> str:
 
     intent = detect_intent(nlp, doc)
     if intent:
-        print(f'{bcolors.OKGREEN}Detected intent:{bcolors.ENDC} {intent.value}')
         result['intent'] = detect_intent(nlp, doc)
 
     result['entities'] = {}
@@ -25,4 +24,11 @@ def parse(nlp: Language, utterance: str) -> str:
     airports = extract_airports(nlp, doc)
     if airports:
         result['entities']['airports'] = airports
+
+    gpe_entity_filter = filter(lambda ent: ent.label_ == 'GPE', list(doc.ents))
+    gpe_entities = list(gpe_entity_filter)
+    if gpe_entities:
+        gpe_entity_map = map(lambda ent: ent.text, gpe_entities)
+        result['entities']['geopolitical'] = list(gpe_entity_map)
+
     return result
