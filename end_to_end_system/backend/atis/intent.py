@@ -26,45 +26,60 @@ def get_adjectives(nlp: Language, doc: Doc):
     return [(doc[target], doc[modifier]) for _, (target, modifier) in matcher(doc)]
 
 
-def is_intent_cheapest(adjectives: list[tuple[Token, Token]], object: Token):
-    for (target, modifier) in adjectives:
-        if object == target:
-            if modifier.lemma_ == 'cheap':
-                return True
-    return False
-
-
-def is_intent_most_expensive(adjectives: list[tuple[Token, Token]], object: Token):
-    for (target, modifier) in adjectives:
-        if object == target:
-            if modifier.lemma_ == 'expensive':
-                return True
-    return False
-
-
-def detect_intent(nlp: Language, doc: Doc) -> Optional[Intent]:
+def get_dobj(doc: Doc) -> Token:
     dobjs_filter = filter(lambda token: token.dep_ == 'dobj', list(doc))
     dobjs = list(dobjs_filter)
-    dobj = dobjs[0]
+    return dobjs[0] if dobjs else None
 
-    intentObj = dobj
 
-    # Extract the object of the intent
-    objList = ['flight', 'ticket']
+# Need fix: To be generic (not only specific to Intent.FLIGHT)
+def get_delegated_intent_obj(dobj: Token) -> Token:
+    objList = ['flight', 'ticket', 'fare', 'airfare', 'city', 'airport']
     if dobj.text in objList:
-        intentObj = dobj
+        return dobj
     else:
         for child in dobj.children:
             if child.dep_ == 'prep':
-                intentObj = list(child.children)[0]
-                break
+                return list(child.children)[0]
             elif child.dep_ == 'compound':
-                intentObj = child
-                break
+                return child
 
+
+def obj_has_adjective(obj: Token, adjectives: list[tuple[Token, Token]], adjective: str) -> bool:
+    for (target, modifier) in adjectives:
+        if obj == target:
+            if modifier.lemma_ == adjective:
+                return True
+    return False
+
+
+def detect_dobj_intent(nlp: Language, doc: Doc) -> Optional[Intent]:
+    obj = None
+    dobj = get_dobj(doc)
     adjectives = get_adjectives(nlp, doc)
 
-    if is_intent_cheapest(adjectives, intentObj):
+    if dobj:
+        obj = get_delegated_intent_obj(dobj)
+    elif adjectives:
+        obj = adjectives[0][0]
+
+    if obj and obj_has_adjective(obj, adjectives, 'cheap'):
         return Intent.CHEAPEST
-    elif is_intent_most_expensive(adjectives, intentObj):
+
+    if obj and obj_has_adjective(obj, adjectives, 'expensive'):
         return Intent.MOST_EXPENSIVE
+
+    return None
+
+
+def detect_intent(nlp: Language, doc: Doc) -> Optional[Intent]:
+    dobj_intent = detect_dobj_intent(nlp, doc)
+    if dobj_intent:
+        return dobj_intent
+
+    advmod_filter = filter(lambda token: token.dep_ == 'advmod', list(doc))
+    advmod = list(advmod_filter)
+    if advmod[0].text.lower() == 'where':
+        return Intent.CITY
+
+    return None
