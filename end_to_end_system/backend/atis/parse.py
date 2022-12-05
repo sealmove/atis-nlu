@@ -1,11 +1,10 @@
 from spacy import Language
-from atis.parse import *
 from atis.intent import *
 from atis.entities import *
 from atis.actions import *
 
 
-def parse(nlp: Language, utterance: str) -> str:
+def parse(nlp: Language, utterance: str) -> dict:
     doc = nlp(utterance)
     result = {}
 

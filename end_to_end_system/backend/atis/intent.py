@@ -21,7 +21,7 @@ def get_adjectives(nlp: Language, doc: Doc):
     ]
 
     matcher = DependencyMatcher(nlp.vocab)
-    matcher.add("FOUNDED", [pattern])
+    matcher.add("FOUND", [pattern])
 
     return [(doc[target], doc[modifier]) for _, (target, modifier) in matcher(doc)]
 
@@ -45,12 +45,12 @@ def get_delegated_intent_obj(dobj: Token) -> Token:
                 return child
 
 
-def obj_has_adjective(obj: Token, adjectives: list[tuple[Token, Token]], adjective: str) -> bool:
+def obj_adjective(obj: Token, adjectives: list[tuple[Token, Token]], adjective: str) -> Token:
     for (target, modifier) in adjectives:
         if obj == target:
             if modifier.lemma_ == adjective:
-                return True
-    return False
+                return modifier
+    return None
 
 
 def detect_dobj_intent(nlp: Language, doc: Doc) -> Optional[Intent]:
@@ -63,10 +63,18 @@ def detect_dobj_intent(nlp: Language, doc: Doc) -> Optional[Intent]:
     elif adjectives:
         obj = adjectives[0][0]
 
-    if obj and obj_has_adjective(obj, adjectives, 'cheap'):
+    cheap_adjective = obj_adjective(obj, adjectives, 'cheap')
+    if obj and cheap_adjective:
+        for child in cheap_adjective.children:
+            if child.dep_ == 'advmod' and child.text == 'least':
+                return Intent.MOST_EXPENSIVE
         return Intent.CHEAPEST
 
-    if obj and obj_has_adjective(obj, adjectives, 'expensive'):
+    expensive_adjective = obj_adjective(obj, adjectives, 'expensive')
+    if obj and expensive_adjective:
+        for child in expensive_adjective.children:
+            if child.dep_ == 'advmod' and child.text == 'least':
+                return Intent.CHEAPEST
         return Intent.MOST_EXPENSIVE
 
     return None
